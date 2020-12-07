@@ -1,0 +1,27 @@
+//
+// Created by Илюза Янгирова on 08.12.2020.
+//
+
+#pragma once
+
+#include "ParentStack.hpp"
+
+template<typename T>
+class stackArgs : public stack<T> {
+public:
+    template<typename ... Args>
+    void push_emplace(Args &&... value) {
+        auto temp = stack<T>::stackHead;
+        stack<T>::stackHead = new typename stack<T>::element{{std::forward<Args>(value)...}, temp};
+    }
+
+    T pop() {
+        if (stack<T>::stackHead == nullptr) {
+            throw std::exception();
+        } else {
+            auto temp = stack<T>::stackHead->data;
+            stack<T>::stackHead = stack<T>::stackHead->next;
+            return temp;
+        }
+    }
+};
