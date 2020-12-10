@@ -3,61 +3,139 @@
 #include <gtest/gtest.h>
 #include <StackArgs.hpp>
 #include "Stack.hpp"
+#include <gtest/gtest.h>
 
-TEST(Example, PushTest) {
-    int a = 0;
-    usualStack<int> US{};
-    stackArgs<std::pair<int, int>> SA{};
-    EXPECT_THROW(US.head(), std::exception);
-    EXPECT_THROW(SA.head(), std::exception);
-    SA.push_emplace(1, 2);
-    auto expectedPair = std::make_pair(1, 2);
-    for (int i = 0; i < 5; i++) {
-        US.push(a);
-        a++;
-    }
-    EXPECT_EQ(US.head(), 4);
-    EXPECT_EQ(SA.head(), expectedPair);
+
+
+
+
+TEST(Stack,push_test_1)
+{
+    usualStack<int> my_stack;
+    for (size_t index = 1;index<=10;++index)
+        my_stack.push(index);
+    EXPECT_EQ(my_stack.head(),10);
+
 }
 
-TEST(Example, PopTest) {
-    usualStack<double> US{};
-    stackArgs<std::pair<int, int>> SA{};
-    EXPECT_THROW(US.pop(), std::exception);
-    EXPECT_THROW(SA.pop(), std::exception);
-    US.push(1.1);
-    US.push(3);
-    SA.push_emplace(4, 5);
-    SA.push_emplace(0, 0);
-    EXPECT_EQ(US.head(), 3);
+TEST(Stack,push_test_2)
+{
+    usualStack<int> my_stack;
 
-    auto expectedPair = std::make_pair(0, 0);
-    EXPECT_EQ(SA.head(), expectedPair);
-    expectedPair = SA.pop();
-    auto expectedPairAfterRop = std::make_pair(4, 5);
-    EXPECT_EQ(SA.pop(), expectedPairAfterRop);
-    US.pop();
-    EXPECT_EQ(US.head(), 1.1);
+    my_stack.push(std::move(1));
+    my_stack.push(std::move(5));
+    my_stack.push(std::move(10));
+
+    EXPECT_EQ(my_stack.head(),10);
+
 }
 
-TEST(Example, MoveTest) {
-    std::string str = "text";
-    usualStack<std::string> US{};
-    US.push(std::move(str));
-    EXPECT_EQ(US.head(), "text");
-    EXPECT_TRUE(str.empty());
+
+TEST(Stack,push_test_3)
+{
+    usualStack<int> my_stack;
+
+    my_stack.push(std::move(1));
+    EXPECT_EQ(my_stack.head(),1);
+    my_stack.push(std::move(5));
+    EXPECT_EQ(my_stack.head(),5);
+    my_stack.push(std::move(10));
+    EXPECT_EQ(my_stack.head(),10);
 }
 
-TEST(Example, IsMoveConstructible) {
-    EXPECT_TRUE(std::is_move_constructible<usualStack<int>>());
-    using stackArgsCheck =
-    std::is_move_constructible<stackArgs<std::pair<int, int>>>;
-    EXPECT_TRUE(stackArgsCheck());
+
+
+TEST(Stack,push_test_4)
+{
+    usualStack<int> my_stack;
+    int one = 90;
+    my_stack.push(one);
+    EXPECT_EQ(my_stack.head(),90);
+    my_stack.push(5);
+    EXPECT_EQ(my_stack.head(),5);
+    my_stack.push(10);
+    EXPECT_EQ(my_stack.head(),10);
 }
 
-TEST(Example, IsMoveAssignable) {
-    EXPECT_TRUE(std::is_move_assignable<usualStack<double>>());
-    using stackArgsCheck =
-    std::is_move_assignable<stackArgs<std::pair<int, double>>>;
-    EXPECT_TRUE(stackArgsCheck());
+TEST(Stack,pop_test_1)
+{
+    usualStack<int> my_stack;
+
+    my_stack.push(std::move(1));
+    my_stack.push(std::move(5));
+    my_stack.pop();
+
+    EXPECT_EQ(my_stack.head(),1);
+
+}
+
+TEST(Stack,Exeption)
+{
+    usualStack<int> my_stack;
+    EXPECT_THROW(my_stack.head(),std::exception);
+    EXPECT_THROW(my_stack.pop(),std::exception);
+    stackArgs<int> my_new_stack;
+    EXPECT_THROW(my_new_stack.head(),std::exception);
+    EXPECT_THROW(my_new_stack.pop(),std::exception);
+
+
+}
+
+TEST(StackNonCopy, test1)
+{
+    stackArgs<int> my_stack;
+
+    my_stack.push(std::move(1));
+    my_stack.push(5);
+
+    my_stack.push_emplace(4);
+    my_stack.push_emplace(3);
+
+    EXPECT_EQ(my_stack.head(),3);
+    EXPECT_EQ(my_stack.pop(),3);
+}
+
+TEST(StackNonCopy, test2){
+
+    stackArgs<int> my_stack;
+
+    my_stack.push(std::move(1));
+    my_stack.push(5.);
+    my_stack.push_emplace('f');
+    my_stack.push_emplace(true);
+
+    EXPECT_EQ(my_stack.head(),true);
+    EXPECT_EQ(my_stack.pop(),true);
+    EXPECT_EQ(my_stack.head(), 'f');
+
+    EXPECT_EQ(my_stack.pop(),'f');
+    EXPECT_EQ(my_stack.head(), 5.);
+
+    EXPECT_EQ(my_stack.pop(),5.);
+    EXPECT_EQ(my_stack.head(), 1);
+
+    EXPECT_EQ(my_stack.pop(),1);
+
+
+    EXPECT_THROW(my_stack.head(),std::exception);
+    EXPECT_THROW(my_stack.pop(),std::exception);
+
+
+}
+
+TEST(StackNonCopy, test3){
+    stackArgs<std::pair<std::string,int >> my_stack;
+    std::pair<std::string,int > one;
+    one.first = "key";
+    one.second = true;
+    my_stack.push_emplace(one);
+
+    std::pair <std::string, int> second;
+    second.first = "key";
+    second.second = true;
+    my_stack.push_emplace(second);
+    EXPECT_EQ(my_stack.head(), second);
+    EXPECT_EQ(my_stack.pop(), second);
+    EXPECT_EQ(my_stack.head(), one);
+
 }
