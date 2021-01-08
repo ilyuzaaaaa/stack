@@ -10,7 +10,7 @@ template<typename T>
 class usualStack : public stack<T> {
 public:
     void push(const T &value) {
-        auto elem = new typename stack<T>::element{value, stack<T>::stackHead};
+        auto* elem = new typename stack<T>::element{value, stack<T>::stackHead};
         stack<T>::stackHead = elem;
     }
 

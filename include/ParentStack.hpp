@@ -17,7 +17,7 @@ public:
     stack() = default;
 
     virtual void push(T &&value) {
-        auto elem = new element{std::forward<T>(value), stackHead};
+        auto* elem = new element{std::forward<T>(value), stackHead};
         stackHead = elem;
     }
 
