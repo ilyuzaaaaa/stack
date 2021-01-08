@@ -2,22 +2,24 @@
 
 #pragma once
 
+#pragma once
+
 #include <utility>
 #include <exception>
-
+template <class T>
+struct element {
+    T data;
+    element *next;
+};
 template<typename T>
 class stack {
 protected:
-    struct element {
-        T data;
-        element *next;
-    };
-    element *stackHead = nullptr;
+    element<T> *stackHead = nullptr;
 public:
     stack() = default;
 
     virtual void push(T &&value) {
-        auto* elem = new element{std::forward<T>(value), stackHead};
+        auto* elem = new element<T>{std::forward<T>(value), stackHead};
         stackHead = elem;
     }
 
@@ -29,5 +31,11 @@ public:
         }
     }
 
-    virtual ~stack() = default;
+    virtual ~stack(){
+        while (stackHead){
+            auto *current = stackHead;
+            stackHead = stackHead->next;
+            delete current;
+        }
+    }
 };

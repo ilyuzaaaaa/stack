@@ -10,7 +10,7 @@ template<typename T>
 class usualStack : public stack<T> {
 public:
     void push(const T &value) {
-        auto* elem = new typename stack<T>::element{value, stack<T>::stackHead};
+        auto* elem = new element<T>{value, stack<T>::stackHead};
         stack<T>::stackHead = elem;
     }
 
@@ -22,7 +22,9 @@ public:
         if (stack<T>::stackHead == nullptr) {
             throw std::exception();
         } else {
+            auto *upper = stack<T>::stackHead;
             stack<T>::stackHead = stack<T>::stackHead->next;
+            delete upper;
         }
     }
 };
