@@ -124,13 +124,13 @@ TEST(StackNonCopy, test2){
 }
 
 TEST(StackNonCopy, test3){
-    stackArgs<std::pair<std::string,int >> my_stack;
-    std::pair<std::string,int > one;
+    stackArgs<std::pair<std::string,bool >> my_stack;
+    std::pair<std::string,bool > one;
     one.first = "key";
     one.second = true;
     my_stack.push_emplace(one);
 
-    std::pair <std::string, int> second;
+    std::pair <std::string, bool> second;
     second.first = "key";
     second.second = true;
     my_stack.push_emplace(second);
@@ -138,4 +138,10 @@ TEST(StackNonCopy, test3){
     EXPECT_EQ(my_stack.pop(), second);
     EXPECT_EQ(my_stack.head(), one);
 
+}
+TEST(Stack, IsMoveConstuctibleAssignable) {
+    EXPECT_TRUE(std::is_move_constructible<stackArgs<int>>());
+    EXPECT_TRUE(std::is_move_constructible<usualStack<int>>());
+    EXPECT_TRUE(std::is_move_assignable<usualStack<int>>());
+    EXPECT_TRUE(std::is_move_assignable<stackArgs<int>>());
 }
