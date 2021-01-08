@@ -139,3 +139,10 @@ TEST(StackNonCopy, test3){
     EXPECT_EQ(my_stack.head(), one);
 
 }
+
+TEST(Stack, IsMoveConstuctibleAssignable) {
+    EXPECT_TRUE(std::is_move_constructible<stackArgs<int>>());
+    EXPECT_TRUE(std::is_move_constructible<usualStack<int>>());
+    EXPECT_TRUE(std::is_move_assignable<usualStack<int>>());
+    EXPECT_TRUE(std::is_move_assignable<stackArgs<int>>());
+}
